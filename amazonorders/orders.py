@@ -42,6 +42,8 @@ class AmazonOrders:
                           year: int = datetime.date.today().year,
                           start_index: Optional[int] = None,
                           full_details: bool = False) -> List[Order]:
+                          full_details: bool = False,
+                          stop_before_date: datetime.date = None) -> List[Order]:
         """
         Get the Amazon order history for the given year.
 
@@ -72,11 +74,15 @@ class AmazonOrders:
             for order_tag in response_parsed.select(constants.ORDER_HISTORY_ENTITY_SELECTOR):
                 order = Order(order_tag)
 
+                if (stop_before_date is not None) and order.order_placed_date < stop_before_date:
+                    return orders
+
                 if full_details:
-                    self.amazon_session.get(order.order_details_link)
-                    order_details_tag = self.amazon_session.last_response_parsed.select_one(
-                        constants.ORDER_DETAILS_ENTITY_SELECTOR)
-                    order = Order(order_details_tag, full_details=True, clone=order)
+                    if "order-details" in order.order_details_link:
+                        self.amazon_session.get(order.order_details_link)
+                        order_details_tag = self.amazon_session.last_response_parsed.select_one(
+                            constants.ORDER_DETAILS_ENTITY_SELECTOR)
+                        order = Order(order_details_tag, full_details=True, clone=order)
 
                 orders.append(order)
 

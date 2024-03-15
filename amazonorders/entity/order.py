@@ -11,6 +11,7 @@ from amazonorders.entity.item import Item
 from amazonorders.entity.parsable import Parsable
 from amazonorders.entity.recipient import Recipient
 from amazonorders.entity.shipment import Shipment
+from amazonorders.entity.transaction import Transaction
 
 __author__ = "Alex Laird"
 __copyright__ = "Copyright 2024, Alex Laird"
@@ -74,6 +75,8 @@ class Order(Parsable):
         self.order_shipped_date: Optional[date] = self._if_full_details(self._parse_order_shipping_date())
         #: The Order refund total. Only populated when ``full_details`` is ``True``.
         self.refund_completed_date: Optional[date] = self._if_full_details(self._parse_refund_completed_date())
+        # The Order transactions. Only populated when ``full_details`` is ``True``.
+        self.transactions: Optional[List[Transaction]] = self._if_full_details(self._parse_transactions())
 
     def __repr__(self) -> str:
         return f"<Order #{self.order_number}: \"{self.items}\">"
@@ -107,8 +110,11 @@ class Order(Parsable):
             order_details_link = None
 
         if order_details_link:
-            parsed_url = urlparse(order_details_link)
-            value = parse_qs(parsed_url.query)["orderID"][0]
+            try:
+                parsed_url = urlparse(order_details_link)
+                value = parse_qs(parsed_url.query)["orderID"][0]
+            except Exception:
+                value = self.simple_parse(constants.FIELD_ORDER_NUMBER_SELECTOR, required=True)
         else:
             value = self.simple_parse(constants.FIELD_ORDER_NUMBER_SELECTOR, required=True)
 
@@ -273,6 +279,11 @@ class Order(Parsable):
             value = datetime.strptime(date_str, "%B %d, %Y").date()
 
         return value
+
+    def _parse_transactions(self) -> Optional[Transaction]:
+        transactions = [Transaction(x) for x in self.parsed.select(constants.FIELD_ORDER_TRANSACTIONS_SELECTOR)]
+        transactions.sort()
+        return transactions
 
     def _if_full_details(self, value):
         return value if self.full_details else None

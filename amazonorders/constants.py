@@ -114,6 +114,7 @@ FIELD_ORDER_ADDRESS_FALLBACK_1_SELECTOR = "div.recipient span.a-declarative"
 FIELD_ORDER_ADDRESS_FALLBACK_2_SELECTOR = "script[id^='shipToData']"
 FIELD_ORDER_SHIPPED_DATE_SELECTOR = "#orderDetails div.a-box.a-last div div div.a-row:not(.a-color-success)"
 FIELD_ORDER_REFUND_COMPLETED_DATE = "#orderDetails div.a-box.a-last div div div.a-row.a-color-success"
+FIELD_ORDER_TRANSACTIONS_SELECTOR = "#orderDetails div.a-expander-container div.a-expander-content div.a-row"
 
 #####################################
 # CSS selectors for Shipment fields
@@ -139,3 +140,10 @@ FIELD_RECIPIENT_ADDRESS_FALLBACK_SELECTOR = "div:nth-child(2)"
 
 FIELD_SELLER_NAME_SELECTOR = ["a", "span"]
 FIELD_SELLER_LINK_SELECTOR = "a"
+
+#####################################
+# CSS selectors for Transaction fields
+#####################################
+
+# FIELD_TRANSACTION_PURPOSE_SELECTOR = "span:nth-child(1)"
+# FIELD_TRANSACTION_DETAILS_SELECTOR = "span:nth-child(2)"

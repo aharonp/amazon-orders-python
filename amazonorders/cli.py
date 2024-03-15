@@ -271,6 +271,8 @@ Order #{}
         order_str += f"\n  Order Shipped Date: {order.order_shipped_date}"
     if order.refund_completed_date:
         order_str += f"\n  Refund Completed Date: {order.refund_completed_date}"
+    if order.transactions:
+        order_str += f"\n  Transactions: {order.transactions}"
 
     order_str += "\n-----------------------------------------------------------------------"
 
