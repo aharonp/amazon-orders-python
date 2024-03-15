@@ -41,7 +41,6 @@ class AmazonOrders:
     def get_order_history(self,
                           year: int = datetime.date.today().year,
                           start_index: Optional[int] = None,
-                          full_details: bool = False) -> List[Order]:
                           full_details: bool = False,
                           stop_before_date: datetime.date = None) -> List[Order]:
         """
