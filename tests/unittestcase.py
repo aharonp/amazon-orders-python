@@ -1,6 +1,8 @@
+__copyright__ = "Copyright (c) 2024 Alex Laird"
+__license__ = "MIT"
+
 import os
 import re
-import unittest
 
 import responses
 from responses.matchers import urlencoded_params_matcher
@@ -10,13 +12,7 @@ from amazonorders.constants import SIGN_IN_URL, SIGN_IN_REDIRECT_URL, ORDER_HIST
     ORDER_DETAILS_URL
 from tests.testcase import TestCase
 
-__author__ = "Alex Laird"
-__copyright__ = "Copyright 2024, Alex Laird"
-__version__ = "1.0.13"
 
-
-@unittest.skipIf(os.environ.get("INTEGRATION_TEST", "False") == "True",
-                 "Skipping unit test, INTEGRATION_TEST=True was set in the environment")
 class UnitTestCase(TestCase):
     RESOURCES_DIR = os.path.normpath(
         os.path.join(os.path.abspath(os.path.dirname(__file__)), "resources"))

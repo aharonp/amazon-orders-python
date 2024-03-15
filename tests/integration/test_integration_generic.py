@@ -1,17 +1,14 @@
+__copyright__ = "Copyright (c) 2024 Alex Laird"
+__license__ = "MIT"
+
+import datetime
 import os
-import unittest
 
 from amazonorders.orders import AmazonOrders
 from amazonorders.session import AmazonSession
 from tests.testcase import TestCase
 
-__author__ = "Alex Laird"
-__copyright__ = "Copyright 2024, Alex Laird"
-__version__ = "1.0.4"
 
-
-@unittest.skipIf(os.environ.get("INTEGRATION_TEST_GENERIC", "False") != "True",
-                 "Skipping, INTEGRATION_TEST_GENERIC=True was not set in the environment")
 class TestIntegrationGeneric(TestCase):
     """
     These integration tests run generically against any Amazon account. The only requirement is that the
@@ -23,7 +20,7 @@ class TestIntegrationGeneric(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.credentials_found = os.environ.get("AMAZON_USERNAME") and os.environ.get("AMAZON_PASSWORD")
-        cls.year_found = os.environ.get("INTEGRATION_TEST_YEAR")
+        cls.year_found = os.environ.get("INTEGRATION_TEST_YEAR", datetime.date.today().year)
 
         cls.amazon_session = AmazonSession(os.environ.get("AMAZON_USERNAME"),
                                            os.environ.get("AMAZON_PASSWORD"))
@@ -34,8 +31,6 @@ class TestIntegrationGeneric(TestCase):
     def setUp(self):
         if not self.credentials_found:
             self.fail("AMAZON_USERNAME and AMAZON_PASSWORD environment variables not set")
-        if not self.year_found:
-            self.fail("INTEGRATION_TEST_YEAR environment variables not set")
 
         self.assertTrue(self.amazon_session.is_authenticated)
 

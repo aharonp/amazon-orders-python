@@ -1,3 +1,6 @@
+__copyright__ = "Copyright (c) 2024 Alex Laird"
+__license__ = "MIT"
+
 import json
 import os
 import unittest
@@ -7,17 +10,11 @@ from amazonorders.orders import AmazonOrders
 from amazonorders.session import AmazonSession
 from tests.testcase import TestCase
 
-__author__ = "Alex Laird"
-__copyright__ = "Copyright 2024, Alex Laird"
-__version__ = "1.0.5"
-
 PRIVATE_RESOURCES_DIR = os.path.normpath(
     os.path.join(os.path.abspath(os.path.dirname(__file__)),
                  "private-resources"))
 
 
-@unittest.skipIf(os.environ.get("INTEGRATION_TEST_JSON", "False") != "True",
-                 "Skipping, INTEGRATION_TEST_JSON=True was not set in the environment")
 class TestIntegrationJSON(TestCase):
     """
     The two JSON files committed to "private-resources" are provided as examples of the syntax. Any other

@@ -28,7 +28,7 @@ test: virtualenv
 	@( \
 		source venv/bin/activate; \
 		python -m pip install ".[dev]"; \
-		python -m coverage run -m unittest discover -v -b && python -m coverage xml && python -m coverage html && python -m coverage report; \
+		coverage run -m pytest -v --ignore=tests/integration && coverage report && coverage xml && coverage html; \
 	)
 
 test-integration: virtualenv
@@ -36,23 +36,7 @@ test-integration: virtualenv
 		source venv/bin/activate; \
 		python -m pip install ".[dev]"; \
 		python amazonorders/cli.py --username $(AMAZON_USERNAME) --password $(AMAZON_PASSWORD) login; \
-		INTEGRATION_TEST=True python -m unittest discover -v -b; \
-	)
-
-test-integration-generic: virtualenv
-	@( \
-		source venv/bin/activate; \
-		python -m pip install ".[dev]"; \
-		python amazonorders/cli.py --username $(AMAZON_USERNAME) --password $(AMAZON_PASSWORD) login; \
-		INTEGRATION_TEST_GENERIC=True python -m unittest discover -v -b; \
-	)
-
-test-integration-json: virtualenv
-	@( \
-		source venv/bin/activate; \
-		python -m pip install ".[dev]"; \
-		python amazonorders/cli.py --username $(AMAZON_USERNAME) --password $(AMAZON_PASSWORD) login; \
-		INTEGRATION_TEST_JSON=True python -m unittest discover -v -b; \
+		coverage run -m pytest -v --rootdir=tests/integration; \
 	)
 
 build-test-resources: virtualenv
@@ -89,8 +73,7 @@ local:
 validate-release:
 	@if [[ "${VERSION}" == "" ]]; then echo "VERSION is not set" & exit 1 ; fi
 
-	@if [[ $$(grep "version = \"${VERSION}\"" pyproject.toml) == "" ]] ; then echo "Version not bumped in pyproject.toml" & exit 1 ; fi
-	@if [[ $$(grep "__version__ = \"${VERSION}\"" amazonorders/conf.py) == "" ]] ; then echo "Version not bumped in amazonrders/conf.py" & exit 1 ; fi
+	@if [[ $$(grep "__version__ = \"${VERSION}\"" amazonorders/__init__.py) == "" ]] ; then echo "Version not bumped in amazonrders/__init__.py" & exit 1 ; fi
 
 upload: local
 	@( \
